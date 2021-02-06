@@ -6,8 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import MainPage from './MainPage';
 import DetailPage from './DetailPage';
-
-import './css/bootstrap/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 ReactDOM.render(
   <BrowserRouter>
