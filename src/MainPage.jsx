@@ -33,7 +33,7 @@ export default class MainPage extends Component {
     render() {
         return <div className="container">
             <TableSearch onChange={this.onChangeEvent} defaultValue={this.state.lastSearch} searching={this.state.loading} />
-            <TableHeader onClick={this.onClickSortBy} lastSortBy={this.state.lastSortBy} />
+            <TableHeader onClick={this.onClickSortBy} lastSortBy={this.state.lastSortBy} disableSorting={this.state.eventsInfoList.length == 0} />
             {
                 this.state.loading ? <TableLoading colSpan="4" /> :
                     !this.state.lastSearch ? <TableSearchIsEmpty colSpan="4" /> :
@@ -189,10 +189,10 @@ function TableHeader(props) {
         <tr>
             <th scope="col" style={{ width: "10%" }}></th>
             <th scope="col" style={{ width: "60%" }}>
-                <button type="button" className="btn btn-link only-link" onClick={() => props.onClick("name")}>Name {isName ? sortIcon : ""}</button>
+                <button type="button" className="btn btn-link only-link" onClick={() => props.onClick("name")} disabled={props.disableSorting}>Name {isName ? sortIcon : ""}</button>
             </th>
             <th scope="col" style={{ width: "20%" }}>
-                <button type="button" className="btn btn-link only-link" onClick={() => props.onClick("date")}>Date {!isName ? sortIcon : ""}</button>
+                <button type="button" className="btn btn-link only-link" onClick={() => props.onClick("date")} disabled={props.disableSorting}>Date {!isName ? sortIcon : ""}</button>
             </th>
             <th scope="col" style={{ width: "10%" }}>Action</th>
         </tr>
