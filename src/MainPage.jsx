@@ -22,8 +22,8 @@ export default class MainPage extends Component {
         this.SearchTimer = null;
 
         this.onChangeEvent = this.onChangeEvent.bind(this);
-        this.GetEventsData = this.GetEventsData.bind(this);
-        this.GetEventsDataByUrl = this.GetEventsDataByUrl.bind(this);
+        this.getEventsData = this.getEventsData.bind(this);
+        this.getEventsDataByUrl = this.getEventsDataByUrl.bind(this);
         this.onClickPaging = this.onClickPaging.bind(this);
         this.onClickSortBy = this.onClickSortBy.bind(this);
         this.clearData = this.clearData.bind(this);
@@ -55,12 +55,12 @@ export default class MainPage extends Component {
 
     componentDidMount() {
         if (this.state.lastPaging)
-            this.GetEventsDataByUrl(this.state.lastPaging);
+            this.getEventsDataByUrl(this.state.lastPaging);
         else if (this.state.lastSearch)
-            this.GetEventsData(this.state.lastSearch, this.state.lastSortBy);
+            this.getEventsData(this.state.lastSearch, this.state.lastSortBy);
     }
 
-    GetEventsData(searchKeyword, sortBy) {
+    getEventsData(searchKeyword, sortBy) {
         if (searchKeyword) {
             GetEvents(PageSize, searchKeyword, sortBy).then(
                 (data) => {
@@ -72,7 +72,7 @@ export default class MainPage extends Component {
         }
     }
 
-    GetEventsDataByUrl(paging) {
+    getEventsDataByUrl(paging) {
         GetEventsByUrl(paging).then(
             (data) => { this.dataManipulation(data); },
             () => {
@@ -133,22 +133,24 @@ export default class MainPage extends Component {
         if (searchKeyword) {
             this.SearchTimer = setTimeout(() => {
                 this.setState({ loading: true, lastSearch: searchKeyword }, () => {
-                    this.GetEventsData(searchKeyword, this.state.lastSortBy);
+                    this.getEventsData(searchKeyword, this.state.lastSortBy);
                 });
             }, 1500);
+
+            sessionStorage.setItem('lastSearch', searchKeyword);
         }
         else {
-            this.setState({ loading: false, lastSearch: null });
+            this.clearData();
         }
 
-        sessionStorage.setItem('lastSearch', searchKeyword);
+
     }
 
     onClickPaging(state) {
         var link = this.state.links[state];
         let paging = link.href.split("?")[1];
         this.state.lastPaging = paging;
-        this.GetEventsDataByUrl(paging);
+        this.getEventsDataByUrl(paging);
         sessionStorage.setItem('lastPaging', paging);
     }
 
@@ -162,7 +164,7 @@ export default class MainPage extends Component {
         }
 
         this.setState({ lastSortBy: sortBy, loading: true }, () => {
-            this.GetEventsData(this.state.lastSearch, this.state.lastSortBy);
+            this.getEventsData(this.state.lastSearch, this.state.lastSortBy);
             sessionStorage.setItem('lastSortBy', sortBy);
         });
     }
@@ -230,6 +232,6 @@ const TableSearch = (props) => <div className="input-group input-group-sm mb-3">
     </div>
     <input type="text" className="form-control" defaultValue={props.defaultValue}
         aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-        onChange={props.onChange} disabled={props.searching} autoFocus/>
+        onChange={props.onChange} disabled={props.searching} autoFocus />
 </div>
 const PageSize = 10;
